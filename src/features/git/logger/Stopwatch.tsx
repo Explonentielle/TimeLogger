@@ -11,7 +11,6 @@ interface StopwatchProps {
 
 export const Stopwatch: React.FC<StopwatchProps> = ({
   issueId,
-  projectId,
   resetAfterSuccess,
   onRequestLogTime,
 }) => {

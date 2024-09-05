@@ -19,7 +19,7 @@ export const useLogTime = () => {
     setConfirmAction(new ActionConfirm("Êtes-vous sûr de vouloir enregistrer ce temps ?"));
   };
 
-  const handleConfirmLog = async (assignedIssues: IssueType[], setAssignedIssues: Function) => {
+  const handleConfirmLog = async (setAssignedIssues: Function) => {
     if (selectedIssue) {
       try {
         const simpleIssue = {

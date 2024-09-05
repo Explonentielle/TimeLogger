@@ -47,20 +47,24 @@ export class IssueManager {
 
       if (!res.ok) {
         const errorText = await res.text();
-        throw new Error(
-          `${errorText}`
-        );
+        throw new Error(`${errorText}`);
       }
 
-      const issueData = await res.json(); // JSON brut avant de le mapper
+      const issueData = await res.json();
+      console.log(issueData);
+      if (issueData.length === 0) {
+        throw new Error(`Aucune issue n'est assignée à votre compte. 
+          Veuillez vérifier si vous êtes correctement assigné à des tickets 
+          ou contacter le support si vous pensez qu'il s'agit d'une erreur.`);
+      }
       this.issues = issueData.map((issue: IssueType) => new Issue(issue));
       return this.issues;
-    } catch (error) {
-      throw new Error("Erreur lors de la récupération des issues");
+    } catch (error: any) {
+      throw new Error(error.message);
     }
   }
 
   public getIssues() {
-    return this.issues
+    return this.issues;
   }
 }

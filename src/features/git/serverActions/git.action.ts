@@ -22,7 +22,7 @@ const verifyTokenUniqueness = async (token: string) => {
 export const fetchAssignedIssues = async (accessToken: string) => {
   try {
     const issueManager = new IssueManager(accessToken as string);
-    const res: Issue[] = await issueManager.fetchAssignedIssues(); // Typage explicite ici
+    const res: Issue[] = await issueManager.fetchAssignedIssues(); 
 
     // Transformer les objets de classe 'Issue' en objets JSON simples
     const issues: IssueType[] = res.map((issue) => ({
