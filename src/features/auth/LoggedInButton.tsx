@@ -32,14 +32,16 @@ export const LoggedInButton = async () => {
         name: user.name || "",
         email: user.email || "",
         photoUrl: user.image || "",
+        username: user.image || "",
       };
 
+
       return (
-        <LoggedInDropDown current={current} id={user?.username ?? ""}>
+        <LoggedInDropDown current={current}>
           <Button variant="outline" size="sm" className="mx-6">
             <Avatar className={`size-7`}>
-              <AvatarFallback>{}</AvatarFallback>
-              <AvatarImage src={user.image || ""} alt={`avatar`} />
+              <AvatarFallback>{current.username[0]}</AvatarFallback>
+              <AvatarImage src={current.photoUrl} alt={`avatar`} />
             </Avatar>
           </Button>
         </LoggedInDropDown>

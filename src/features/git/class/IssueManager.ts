@@ -36,6 +36,7 @@ export class IssueManager {
   async fetchAssignedIssues(): Promise<Issue[]> {
     try {
       const user = await this.userData;
+
       if (!user) {
         throw new Error("Utilisateur non trouvé");
       }
@@ -51,7 +52,6 @@ export class IssueManager {
       }
 
       const issueData = await res.json();
-      console.log(issueData);
       if (issueData.length === 0) {
         throw new Error(`Aucune issue n'est assignée à votre compte. 
           Veuillez vérifier si vous êtes correctement assigné à des tickets 

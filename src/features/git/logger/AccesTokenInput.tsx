@@ -1,4 +1,4 @@
-"use client" 
+"use client";
 
 import {
   Form,
@@ -17,7 +17,14 @@ import { Button } from "@/src/components/ui/button";
 import { TokenSchema, TokenType } from "@/prisma/schemas/token.schema";
 import { Textarea } from "@/src/components/ui/textarea";
 import { useToast } from "@/src/components/ui/use-toast";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/src/components/ui/select";
+import Image from "next/image";
 
 export const AccessTokenInput = () => {
   const router = useRouter();
@@ -25,8 +32,23 @@ export const AccessTokenInput = () => {
 
   const form = useZodForm({
     schema: TokenSchema,
-    defaultValues: { token: "", description: "" },
+    defaultValues: { token: "", description: "", apiSource: "Gitlab" },
   });
+
+  const apisSources = [
+    {
+      name: "Gitlab",
+      image: "https://seeklogo.com/images/G/gitlab-logo-FAA48EFD02-seeklogo.com.png",
+    },
+    {
+      name: "GitHub",
+      image: "https://www.pngarts.com/files/8/Black-Github-Logo-PNG-Image.png",
+    },
+    {
+      name: "Jira",
+      image: "https://seeklogo.com/images/J/jira-logo-FD39F795A7-seeklogo.com.png",
+    },
+  ];
 
   const mutation = useMutation({
     mutationFn: async (values: TokenType) => {
@@ -35,7 +57,9 @@ export const AccessTokenInput = () => {
       if (serverError || !data) {
         toast({
           title: "Erreur",
-          description: serverError ? serverError : "Une erreur inconnue s'est produite lors de l'enregistrement du token.",
+          description: serverError
+            ? serverError
+            : "Une erreur inconnue s'est produite lors de l'enregistrement du token.",
           variant: "destructive",
         });
         return;
@@ -59,6 +83,44 @@ export const AccessTokenInput = () => {
         }
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+          <FormField
+            control={form.control}
+            name="apiSource"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-bold">Catégorie</FormLabel>
+                <FormControl>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue></SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {apisSources.map((apiSource) => {
+                        return (
+                          <SelectItem
+                            value={apiSource.name}
+                            key={apiSource.name}
+                          >
+                            <div className="flex items-center justify-center p-2"
+                            > 
+                              <img
+                                className="w-6 h-6 mr-10"
+                                src={apiSource.image}
+                                alt={`${apiSource.name} logo`}
+                              />
+                              <span>{apiSource.name}</span>
+                            </div>
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="token"
@@ -108,7 +170,6 @@ export const AccessTokenInput = () => {
           </Button>
         </div>
       </Form>
-
     </div>
   );
 };

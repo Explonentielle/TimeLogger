@@ -82,6 +82,8 @@ model Token {
   id                String    @id @default(cuid())
   token             String    @unique
   description       String
+  apiSource         String
+
 
   userId            String
   user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)

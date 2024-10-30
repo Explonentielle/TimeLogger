@@ -6,6 +6,8 @@ import { prisma } from "@/src/prisma";
 import { ActionError, userAction } from "@/src/safe.action";
 import { IssueType } from "@/src/types/issue";
 import { TokenSchema } from "@/prisma/schemas/token.schema";
+import { string } from "zod";
+import { Description } from "@radix-ui/react-toast";
 
 const verifyTokenUniqueness = async (token: string) => {
   const tokenExists = await prisma.token.count({
@@ -21,7 +23,7 @@ const verifyTokenUniqueness = async (token: string) => {
 
 export const fetchAssignedIssues = async (accessToken: string) => {
   try {
-    const issueManager = new IssueManager(accessToken as string);
+    const issueManager = new IssueManager(accessToken);
     const res: Issue[] = await issueManager.fetchAssignedIssues(); 
 
     // Transformer les objets de classe 'Issue' en objets JSON simples
@@ -73,6 +75,19 @@ export const addTokenAction = userAction(
         ...input,
         userId: context.user.id,
       },
+    });
+
+    return token;
+  }
+);
+
+export const fetchToken = userAction(
+  String,
+  async (input, context) => {
+    const token = await prisma.token.findUnique({
+      where: {
+        id: input
+      }
     });
 
     return token;

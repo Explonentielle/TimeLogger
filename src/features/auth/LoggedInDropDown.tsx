@@ -10,9 +10,8 @@ import Link from "next/link"
 
 
 interface LoggedInDropDownProps extends PropsWithChildren {
-    id: string;
     current: {
-        id: string,
+        id?: string,
         name:string,
         email: string,
         photoUrl: string,
@@ -20,7 +19,7 @@ interface LoggedInDropDownProps extends PropsWithChildren {
 }
 
 export const LoggedInDropDown = (props: LoggedInDropDownProps) => {
-    const { id, current, children } = props;
+    const { current, children } = props;
 
     return (
         <DropdownMenu>
@@ -28,7 +27,7 @@ export const LoggedInDropDown = (props: LoggedInDropDownProps) => {
                 {children}
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <Link href={`/users/${id}`}>
+                <Link href={`/users/${current.id}`}>
                     <DropdownMenuItem >
                         <User size='16' className="mr-2" />
                         Profil

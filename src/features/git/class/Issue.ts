@@ -23,7 +23,6 @@ export class Issue {
 
   // Méthode pour formater le temps en h et m
   formatDuration(seconds: number): string {
-    console.log("second :" + seconds);
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     return `${hours}h ${minutes}m`;
@@ -51,7 +50,6 @@ export class Issue {
     }
 
     const data = await response.json();
-    console.log(data);
     return data;
   }
 
