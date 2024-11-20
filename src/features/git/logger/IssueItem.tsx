@@ -13,23 +13,31 @@ export const IssueItem = ({
   resetAfterSuccess,
 }: IssueItemProps) => {
   return (
-    <div className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100">
-      <div className="flex justify-center items-center w-1/2">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mx-4">
-          {issue.title}
-        </h2>
-        <p className="text-sm text-gray-700 dark:text-gray-400  mx-4">
-          Statut: {issue.state}
-        </p>
-        <p className="text-sm text-gray-700 dark:text-gray-400  mx-4">
-          Temps passé: {issue.time_stats?.human_total_time_spent || "Non disponible"}
-        </p>
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white rounded-lg shadow-md border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100">
+      {/* Section d'informations sur l'issue */}
+      <div className="w-full sm:w-[40%] flex flex-col sm:flex-row items-start sm:items-center">
+        <div className="flex flex-col items-center">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mx-2 sm:mx-4">
+            {issue.title}
+          </h2>
+
+          <div className="flex flex-col items-start">
+            <p className="text-sm text-gray-700 dark:text-gray-400 mx-2 sm:mx-4">
+              <strong>Statut :</strong> {issue.state}
+            </p>
+            <p className="text-sm text-gray-700 dark:text-gray-400 mx-2 sm:mx-4">
+            <strong>Temps passé :</strong>{" "}
+              {issue.time_stats?.human_total_time_spent || "Non disponible"}
+            </p>
+          </div>
+        </div>
       </div>
-      <div className="ml-4 w-1/2">
+      {/* Section de la minuterie */}
+      <div className="w-full sm:w-[60%] mt-4 sm:mt-0 flex justify-end sm:justify-start">
         <Stopwatch
           issueId={issue.iid}
           projectId={issue.project_id}
-          onRequestLogTime={() => onRequestLogTime(issue, 0)} 
+          onRequestLogTime={() => onRequestLogTime(issue, 0)}
           resetAfterSuccess={resetAfterSuccess}
         />
       </div>

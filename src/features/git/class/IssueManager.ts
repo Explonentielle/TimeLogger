@@ -22,13 +22,13 @@ export class IssueManager {
       });
 
       if (!res.ok) {
-        throw new Error("Erreur d'authentification");
+        throw Error();
       }
 
       const userData = await res.json();
       return { id: userData.id };
     } catch (error) {
-      throw new Error("Erreur lors de la récupération de l'utilisateur");
+      throw new Error("Erreur lors de la récupération des tickets");
     }
   }
 

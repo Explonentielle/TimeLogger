@@ -59,19 +59,20 @@ export const Stopwatch: React.FC<StopwatchProps> = ({
   )}:${String(seconds % 60).padStart(2, "0")}`;
 
   return (
-    <div className="flex flex-col sm:flex-row items-center w-full p-2 sm:py-4">
-      {/* Affichage du temps formaté */}
-      <div className="w-[110%]">
-        <span className="text-lg font-bold block text-center sm:text-xl md:text-2xl">
+    <div className="flex flex-col xl:flex-row items-center w-full p-2 sm:py-4">
+      
+      <div className="flex-grow mb-2 sm:mb-0">
+        <span className="text-lg font-bold block sm:text-xl md:text-2xl text-center w-32">
           {formattedTime}
         </span>
       </div>
 
-      {/* Boutons en ligne pour desktop, en colonne pour mobile */}
-      <div className="flex flex-col sm:flex-row w-[120%] space-y-2 sm:space-y-0 sm:space-x-2">
+      <div className="hidden sm:block w-4" /> 
+
+      <div className="flex flex-col sm:flex-row w-full sm:w-auto sm:max-w-xs space-y-2 sm:space-y-0 sm:space-x-2">
         <button
           onClick={handleStartStop}
-          className={`w-full p-2 ${
+          className={`w-full sm:w-24 p-2 ${
             isRunning ? "bg-orange-500" : "bg-green-500"
           } text-white rounded text-center font-bold`}
         >
@@ -79,13 +80,13 @@ export const Stopwatch: React.FC<StopwatchProps> = ({
         </button>
         <button
           onClick={handleLogTime}
-          className="w-full p-2 bg-red-500 text-white rounded text-center font-bold"
+          className="w-full sm:w-24 p-2 bg-red-500 text-white rounded text-center font-bold"
         >
           Log Time
         </button>
         <button
           onClick={handleReset}
-          className="w-full p-2 bg-gray-500 text-white rounded text-center font-bold"
+          className="w-full sm:w-24 p-2 bg-gray-500 text-white rounded text-center font-bold"
         >
           Reset
         </button>
