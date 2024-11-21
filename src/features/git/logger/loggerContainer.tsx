@@ -6,14 +6,9 @@ import { useLogTime } from "../hooks/useLogTime";
 import { useEffect, useState } from "react";
 import { IssueType } from "@/src/types/issue";
 import { useFetchIssues } from "../hooks/useFetchIssues";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/src/components/ui/select";
 import { Token } from "@prisma/client";
+import { SelectorContainer } from "@/src/components/SelectorContainer";
+import { apisSources } from "@/src/lib/apiSources";
 
 interface LoggerContainerProps {
   tokens: Token[];
@@ -23,9 +18,10 @@ export default function LoggerContainer({ tokens }: LoggerContainerProps) {
   const [assignedIssues, setAssignedIssues] = useState<IssueType[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [selectedApiSource, setSelectedApiSource] = useState("");
+  const [selectedService, setSelectedService] = useState("");
+  const [isServiceSelected, setIsServiceSelected] = useState(false);
 
   const fetchIssues = useFetchIssues(selectedApiSource);
-
   
   useEffect(() => {
     setAssignedIssues([])
@@ -42,6 +38,16 @@ export default function LoggerContainer({ tokens }: LoggerContainerProps) {
     setIsFetching(false);
   };
 
+  const selectService = () => {
+    setIsFetching(true);
+    setIsServiceSelected(true);
+
+    setTimeout(() => {
+      setIsFetching(false);
+    }, 500);
+  };
+  
+
   const {
     confirmAction,
     handleRequestLogTime,
@@ -53,53 +59,63 @@ export default function LoggerContainer({ tokens }: LoggerContainerProps) {
     <>
       <div className="flex flex-col items-center space-y-4">
         <h2 className="text-xl font-semibold mb-4 dark:text-white">
-          Sélectionnez un token
+          {isServiceSelected
+            ? "Sélectionnez un jeton"
+            : "Sélectionnez un service"}
         </h2>
 
-        <div className="flex flex-col items-stretch w-full space-y-2 md:space-x-2 md:space-y-0 md:flex-row">
-          <Select
-            value={selectedApiSource}
-            onValueChange={setSelectedApiSource}
-          >
-            <SelectTrigger>
-              <SelectValue></SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {tokens.map((token, index: number) => {
-                return (
-                  <SelectItem value={token.id} key={token.apiSource + index}>
-                    <div className="flex items-center space-x-3">
-                      <img
-                        src={
-                          "https://seeklogo.com/images/G/gitlab-logo-FAA48EFD02-seeklogo.com.png"
-                        }
-                        alt={`${token.apiSource + index} logo`}
-                        className="w-6 h-6 rounded-full"
-                      />
-                      <div className="flex items-center">
-                        <span className="font-medium mx-6">
-                          {token.apiSource}
-                        </span>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          {token.description} • Créé le
-                          {" " + new Date(token.createdAt).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
+        {isServiceSelected ? (
+          <SelectorContainer
+            items={tokens
+              .filter(
+                (token) =>
+                  token.apiSource == apisSources[Number(selectedService)].name
+              )
+              .map((token) => ({
+                id: token.id,
+                name: token.apiSource,
+                description: token.description,
+                createdAt: token.createdAt
+                  ? new Date(token.createdAt).toISOString()
+                  : undefined,
+              }))}
+            buttonTextLoading="Chargement..."
+            buttonTextDefault="Récupérer les tickets"
+            showCreationDate={true}
+            isFetching={isFetching}
+            selectedItem={selectedApiSource}
+            setSelectedItem={setSelectedApiSource}
+            handleSearch={handleSearchIssues}
+          />
+        ) : (
+          <SelectorContainer
+            items={apisSources.map((apisSource, index) => ({
+              id: index.toString(),
+              name: apisSource.name,
+              logoUrl: apisSource.image,
+            }))}
+            buttonTextLoading="Chargement..."
+            buttonTextDefault="Choisir un service"
+            showCreationDate={true}
+            isFetching={isFetching}
+            selectedItem={selectedService}
+            setSelectedItem={setSelectedService}
+            handleSearch={selectService}
+          />
+        )}
 
-          <button
-            onClick={handleSearchIssues}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full md:w-1/2"
-            disabled={isFetching}
-          >
-            {isFetching ? "Chargement..." : "Récupérer les tickets"}
-          </button>
-        </div>
+        {isServiceSelected ? (
+          <div className="flex items-center w-full">
+            <span className="flex-grow"></span>
+
+            <button
+              onClick={() => setIsServiceSelected(false)}
+              className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt- ml-auto w-1/3"
+            >
+              Revenir à la sélection du service
+            </button>
+          </div>
+        ) : null}
 
         {assignedIssues.length > 0 ? (
           <div className="flex flex-col space-y-4 w-full">

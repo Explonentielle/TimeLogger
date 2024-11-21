@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/components/ui/select";
-import Image from "next/image";
+import { apisSources } from "@/src/lib/apiSources";
 
 export const AccessTokenInput = () => {
   const router = useRouter();
@@ -34,21 +34,6 @@ export const AccessTokenInput = () => {
     schema: TokenSchema,
     defaultValues: { token: "", description: "", apiSource: "Gitlab" },
   });
-
-  const apisSources = [
-    {
-      name: "Gitlab",
-      image: "https://seeklogo.com/images/G/gitlab-logo-FAA48EFD02-seeklogo.com.png",
-    },
-    {
-      name: "GitHub",
-      image: "https://www.pngarts.com/files/8/Black-Github-Logo-PNG-Image.png",
-    },
-    {
-      name: "Jira",
-      image: "https://seeklogo.com/images/J/jira-logo-FD39F795A7-seeklogo.com.png",
-    },
-  ];
 
   const mutation = useMutation({
     mutationFn: async (values: TokenType) => {
@@ -156,6 +141,7 @@ export const AccessTokenInput = () => {
                   />
                 </FormControl>
                 <FormMessage />
+                <p className="text-xs text-gray-500 dark:text-gray-400">*optional</p>
               </FormItem>
             )}
           />
